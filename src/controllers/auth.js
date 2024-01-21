@@ -17,7 +17,9 @@ exports.login = async (req, res, next) => {
       res.status(400).send({ error: { message: 'Invalid email or password!' } })
     }
 
-    res.send(user)
+    const token = await user.generateToken()
+
+    res.send({ ...user.toObject(), token })
   } catch (err) {
     res.status(500).send(err)
   }
