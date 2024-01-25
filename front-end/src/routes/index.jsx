@@ -1,8 +1,11 @@
+import { ErrorBoundary } from "@/components/error-boundary";
+import { AppLayout } from "@/layout";
 import { SignIn } from "@/pages/auth/signin";
+import SignUp from "@/pages/auth/signup";
+import Home from "@/pages/home";
 import { useAuth } from "@/providers/auth-provider";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./protected-route";
-import SignUp from "@/pages/auth/signup";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -27,11 +30,16 @@ const Routes = () => {
   const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      element: (
+        <AppLayout>
+          <ProtectedRoute />
+        </AppLayout>
+      ),
+      errorElement: <ErrorBoundary />,
       children: [
         {
           path: "",
-          element: <div>User Home Page</div>,
+          element: <Home />,
         },
         {
           path: "/bill",

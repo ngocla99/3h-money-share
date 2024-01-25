@@ -4,14 +4,16 @@ import { Input } from "@/components/ui/input";
 import { signUpSchema } from "@/lib/validations/auth";
 import { useAuth } from "@/providers/auth-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingButton from "../button/loading-button";
 import { PasswordInput } from "../password-input";
 
 export function SignUpForm() {
   const { setToken } = useAuth();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const form = useForm({
     resolver: zodResolver(signUpSchema),
@@ -25,7 +27,7 @@ export function SignUpForm() {
   const signUpMutation = useMutation({
     mutationFn: signUpApi,
     onSuccess: ({ data }) => {
-      redirect("/");
+      navigate("/");
       setToken(data.token);
       // Invalidates cache and refetch
       queryClient.invalidateQueries({ active: true });

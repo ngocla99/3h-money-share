@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/lib/validations/auth";
 import { useAuth } from "@/providers/auth-provider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingButton from "../button/loading-button";
 
 export const SignInForm = () => {
