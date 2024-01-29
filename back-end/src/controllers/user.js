@@ -16,7 +16,7 @@ exports.getGroups = async (req, res, next) => {
   try {
     const groups = await req.user.getGroups()
 
-    res.status(201).send(groups)
+    res.status(200).send(groups)
   } catch (err) {
     res.status(500).send(err)
   }

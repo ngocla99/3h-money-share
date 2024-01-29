@@ -1,11 +1,14 @@
 import { ErrorBoundary } from "@/components/error-boundary";
 import { AppLayout } from "@/layout";
-import { SignIn } from "@/pages/auth/signin";
+import SignIn from "@/pages/auth/signin";
+import SignOut from "@/pages/auth/signout";
 import SignUp from "@/pages/auth/signup";
 import Home from "@/pages/home";
+import Groups from "@/pages/groups";
 import { useAuth } from "@/providers/auth-provider";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./protected-route";
+import NewBill from "@/pages/bills/new-bill";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -42,12 +45,22 @@ const Routes = () => {
           element: <Home />,
         },
         {
-          path: "/bill",
-          element: <div>Bill</div>,
+          path: "/bills/new",
+          element: <NewBill />,
         },
         {
-          path: "/logout",
-          element: <div>Logout</div>,
+          path: "/groups",
+          element: <Groups />,
+        },
+      ],
+    },
+    {
+      path: "/",
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: "/signout",
+          element: <SignOut />,
         },
       ],
     },

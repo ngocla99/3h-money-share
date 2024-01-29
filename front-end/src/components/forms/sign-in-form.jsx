@@ -4,17 +4,23 @@ import { useForm } from "react-hook-form";
 import { signInApi } from "@/api/services/auth";
 import { Icons } from "@/components/icons";
 import { PasswordInput } from "@/components/password-input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/lib/validations/auth";
 import { useAuth } from "@/providers/auth-provider";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import LoadingButton from "../button/loading-button";
 
 export const SignInForm = () => {
   const { setToken } = useAuth();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   // react-hook-form
@@ -31,8 +37,6 @@ export const SignInForm = () => {
     onSuccess: ({ data }) => {
       navigate("/");
       setToken(data.token);
-      // Invalidates cache and refetch
-      queryClient.invalidateQueries({ active: true });
     },
     onError: (err) => {
       console.log("🚀 ~ SignInForm ~ err:", err);
@@ -41,24 +45,23 @@ export const SignInForm = () => {
 
   const onSubmit = (data) => {
     if (signInMutation.isLoading) return;
-    try {
-      signInMutation.mutate(data);
-    } catch (err) {
-      console.log(err);
-    }
+    signInMutation.mutate(data);
   };
 
   return (
     <Form {...form}>
-      <form className='grid gap-4' onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}>
+      <form
+        className="grid gap-4"
+        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+      >
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='nemo@nemo.com' {...field} />
+                <Input placeholder="nemo@nemo.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,21 +69,20 @@ export const SignInForm = () => {
         />
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='**********' {...field} />
+                <PasswordInput placeholder="**********" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <LoadingButton loading={signInMutation.isLoading}>
-          {signInMutation.isLoading && <Icons.spinner className='mr-2 h-4 w-4 animate-spin' aria-hidden='true' />}
+        <LoadingButton loading={signInMutation.isPending}>
           Sign in
-          <span className='sr-only'>Sign in</span>
+          <span className="sr-only">Sign in</span>
         </LoadingButton>
       </form>
     </Form>

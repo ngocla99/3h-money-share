@@ -1,11 +1,11 @@
 import axiosClient from "../axios";
 
-export async function signInApi(user) {
-  return await axiosClient.post("/auth/login", user);
+export function signInApi(user) {
+  return axiosClient.post("/auth/login", user);
 }
 
-export async function signUpApi(user) {
-  return await axiosClient.post("/auth/signup", user);
+export function signUpApi(user) {
+  return axiosClient.post("/auth/signup", user);
 }
 
-export async function signOutApi(user) {}
+export function signOutApi(user) {}

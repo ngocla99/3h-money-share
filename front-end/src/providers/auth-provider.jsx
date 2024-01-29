@@ -1,5 +1,11 @@
 import axiosClient from "@/api/axios";
-import { createContext, useContext, useMemo, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 
 // Create the authentication context
 const AuthContext = createContext();
@@ -15,7 +21,8 @@ const authReducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.setToken:
       // Set the authentication token in axios headers and local storage
-      axiosClient.defaults.headers.common["Authorization"] = "Bearer " + action.payload;
+      axiosClient.defaults.headers.common["Authorization"] =
+        "Bearer " + action.payload;
       localStorage.setItem("token", action.payload);
 
       // Update the state with the new token
@@ -32,7 +39,9 @@ const authReducer = (state, action) => {
     // Handle other actions (if any)
 
     default:
-      console.error(`You passed an action.type: ${action.type} which doesn't exist`);
+      console.error(
+        `You passed an action.type: ${action.type} which doesn't exist`
+      );
   }
 };
 
@@ -69,7 +78,9 @@ const AuthProvider = ({ children }) => {
   );
 
   // Provide the authentication context to the children components
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
 // Custom hook to easily access the authentication context

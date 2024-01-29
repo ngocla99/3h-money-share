@@ -1,15 +1,24 @@
-import { Button } from "@/components/ui/button";
-import { redirect } from "react-router-dom";
+import { getBillsApi } from "@/api/services/bill";
+import { BillsTableShell } from "@/components/shells/bills-table-shell";
+import { Shell } from "@/components/shells/shell";
+import { useQuery } from "@tanstack/react-query";
 
 const Home = () => {
+  const { data: bills } = useQuery({
+    queryKey: ["bills"],
+    queryFn: getBillsApi,
+    select: ({ data }) =>
+      data.map((el, idx) => ({
+        ...el,
+        category: "Food",
+        status: "pending",
+      })),
+  });
+
   return (
-    <Button
-      onClick={() => {
-        return redirect("/login");
-      }}
-    >
-      Go to Login
-    </Button>
+    <Shell>
+      <BillsTableShell dataTable={{ data: bills ?? [], pageCount: 1 }} />
+    </Shell>
   );
 };
 

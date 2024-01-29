@@ -8,13 +8,13 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ email: email })
 
     if (!user) {
-      res.status(404).send()
+      return res.status(404).send({ error: { message: 'Invalid email or password!' } })
     }
 
     const checkPassword = await bcrypt.compare(password, user.password)
 
     if (!checkPassword) {
-      res.status(400).send({ error: { message: 'Invalid email or password!' } })
+      return res.status(400).send({ error: { message: 'Invalid email or password!' } })
     }
 
     const token = await user.generateToken()

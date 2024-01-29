@@ -9,7 +9,33 @@ const links = {
 export const siteConfig = {
   name: "Money Share",
   links,
-  mainNav: [],
+  mainNav: [
+    {
+      title: "Lobby",
+      items: [
+        {
+          title: "Products",
+          href: "/",
+          description: "All the products we have to offer.",
+          items: [],
+        },
+        {
+          title: "Build a Board",
+          href: "/",
+          description: "Build your own custom skateboard.",
+          items: [],
+        },
+        {
+          title: "Blog",
+          href: "/",
+          description: "Read our latest blog posts.",
+          items: [],
+        },
+      ],
+    },
+    // { title: "Bills", href: "/bills" },
+    { title: "Groups", href: "/groups" },
+  ],
   footerNav: [
     {
       title: "Help",

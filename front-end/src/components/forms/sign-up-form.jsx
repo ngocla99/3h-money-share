@@ -1,10 +1,17 @@
 import { signUpApi } from "@/api/services/auth";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signUpSchema } from "@/lib/validations/auth";
 import { useAuth } from "@/providers/auth-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import LoadingButton from "../button/loading-button";
@@ -12,7 +19,6 @@ import { PasswordInput } from "../password-input";
 
 export function SignUpForm() {
   const { setToken } = useAuth();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const form = useForm({
@@ -29,8 +35,6 @@ export function SignUpForm() {
     onSuccess: ({ data }) => {
       navigate("/");
       setToken(data.token);
-      // Invalidates cache and refetch
-      queryClient.invalidateQueries({ active: true });
     },
     onError: (err) => {
       console.log("🚀 ~ SignUpForm ~ err:", err);
@@ -38,12 +42,8 @@ export function SignUpForm() {
   });
 
   const onSubmit = (data) => {
-    if (signUpMutation.isLoading) return;
-    try {
-      signUpMutation.mutate(data);
-    } catch (err) {
-      console.log(err);
-    }
+    if (signUpMutation.isPending) return;
+    signUpMutation.mutate(data);
   };
 
   return (
@@ -52,16 +52,16 @@ export function SignUpForm() {
         onSubmit={form.handleSubmit(onSubmit, (err) => {
           console.log(err);
         })}
-        className='grid gap-4'
+        className="grid gap-4"
       >
         <FormField
           control={form.control}
-          name='name'
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder='nemo' {...field} />
+                <Input placeholder="nemo" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,12 +69,12 @@ export function SignUpForm() {
         />
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='nemo@nemo.com' {...field} />
+                <Input placeholder="nemo@nemo.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,20 +82,20 @@ export function SignUpForm() {
         />
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='**********' {...field} />
+                <PasswordInput placeholder="**********" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <LoadingButton loading={signUpMutation.isLoading}>
+        <LoadingButton loading={signUpMutation.isPending}>
           Continue
-          <span className='sr-only'>Continue to email verification page</span>
+          <span className="sr-only">Continue to email verification page</span>
         </LoadingButton>
       </form>
     </Form>

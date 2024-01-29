@@ -9,7 +9,7 @@ const billSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'group'
     },
-    isPaid: [
+    payers: [
       {
         type: Schema.Types.ObjectId,
         ref: 'user'
