@@ -26,7 +26,7 @@ axiosClient.interceptors.response.use(
     // it means the token has expired and we need to refresh it
     if (error.response.status === 401 && !originalRequest._retry) {
       localStorage.removeItem("token");
-      window.location.reload();
+      window.location.replace("/signin");
     }
 
     return Promise.reject(error);
