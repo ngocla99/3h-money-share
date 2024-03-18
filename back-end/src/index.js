@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const authRouter = require('./routes/auth')
-const userRouter = require('./routes/user')
+const groupRouter = require('./routes/group')
 const billRouter = require('./routes/bill')
 
 app.use((req, res, next) => {
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/auth', authRouter)
-app.use('/users', isAuthenticated, userRouter)
+app.use('/groups', groupRouter)
 app.use('/bills', isAuthenticated, billRouter)
 
 app.listen(PORT, () => {

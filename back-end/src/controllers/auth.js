@@ -43,3 +43,7 @@ exports.signup = async (req, res, next) => {
     res.status(500).send(err)
   }
 }
+
+exports.getMe = async (req, res, next) => {
+  return req.user
+}

@@ -1,8 +1,17 @@
-console.log('Studying new technique!')
-var jwt = require('jsonwebtoken')
-var token = jwt.sign({ _id: '65ab09fb0e38eb75494e912e' }, 'the secret', { expiresIn: '1h' })
-console.log(token)
+const slugify = require('slugify')
+const jwt = require('jsonwebtoken')
 
-var decoded = jwt.verify(token, 'the secret')
-console.log(decoded)
-console.log(decoded.exp - decoded.iat)
+const main = async () => {
+  const t = await jwt.sign(
+    { groupId: '65f7b2f50421b8c39655f5d4', members: [{ userId: '65b3501c1897491e761fc98a', role: 'g:user' }] },
+    'my_secret_key',
+    {
+      expiresIn: '1h'
+    }
+  )
+  const decoded = jwt.verify(t, 'my_secret_key')
+  console.log('🚀 ~ main ~ decoded:', decoded)
+  console.log('🚀 ~ ) ~ t:', t)
+}
+
+main()
