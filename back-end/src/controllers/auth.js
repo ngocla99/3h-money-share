@@ -8,19 +8,22 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ email: email })
 
     if (!user) {
-      return res.status(404).send({ error: { message: 'Invalid email or password!' } })
+      return res.status(404).json({ error: { message: 'Invalid email or password!' } })
     }
 
     const checkPassword = await bcrypt.compare(password, user.password)
 
     if (!checkPassword) {
-      return res.status(400).send({ error: { message: 'Invalid email or password!' } })
+      return res.status(400).json({ error: { message: 'Invalid email or password!' } })
     }
 
     const token = await user.generateToken()
+    const userObject = user.toObject()
+    delete userObject.password
 
-    res.send({ ...user.toObject(), token })
+    res.json({ ...userObject, token })
   } catch (err) {
+    console.log('🚀 ~ exports.login= ~ err:', err)
     res.status(500).send(err)
   }
 }
@@ -45,5 +48,6 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.getMe = async (req, res, next) => {
-  return req.user
+  console.log('🚀 ~ exports.getMe= ~ getMe:', req.user)
+  res.json(req.user)
 }

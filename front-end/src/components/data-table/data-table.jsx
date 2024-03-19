@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounce } from "@/hooks";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 export function DataTable({

@@ -13,6 +13,7 @@ import {
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { GroupSwitcher } from "../group-switcher";
 
 export function MainNav({ items }) {
   return (
@@ -26,6 +27,7 @@ export function MainNav({ items }) {
       </Link>
       <NavigationMenu>
         <NavigationMenuList>
+          <GroupSwitcher />
           {items?.[0]?.items ? (
             <NavigationMenuItem>
               <NavigationMenuTrigger className="h-auto">

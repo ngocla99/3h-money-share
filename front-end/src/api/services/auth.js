@@ -8,4 +8,6 @@ export function signUpApi(user) {
   return axiosClient.post("/auth/signup", user);
 }
 
-export function signOutApi(user) {}
+export function getMeApi() {
+  return axiosClient.get("/auth/me");
+}

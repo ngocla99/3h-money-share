@@ -14,6 +14,14 @@ const userSchema = new Schema({
   }
 })
 
+userSchema.methods.toJSON = function () {
+  const user = this
+  const userObject = user.toObject()
+  delete userObject.password
+
+  return userObject
+}
+
 userSchema.methods.generateToken = async function () {
   const token = await jwt.sign({ _id: this._id }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' })
   return token

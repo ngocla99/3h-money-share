@@ -3,7 +3,7 @@ import * as React from "react";
 import { Icons } from "@/components/icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMounted } from "@/hooks/use-mounted";
+import { useMounted } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import { useNavigate } from "react-router-dom";
