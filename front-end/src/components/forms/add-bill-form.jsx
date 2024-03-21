@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-export default function AddBillForm() {
+export function AddBillForm() {
   const [payers, setPayers] = React.useState([]);
   const queryClient = useQueryClient();
 
@@ -64,7 +64,9 @@ export default function AddBillForm() {
       // Invalidates cache and refetch
       queryClient.invalidateQueries({ queryKey: ["bills"] });
     },
-    onError: (err) => {},
+    onError: (err) => {
+      toast.error(err.message);
+    },
   });
 
   const groupId = watch("group");
@@ -91,7 +93,7 @@ export default function AddBillForm() {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Type bill title here." {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,7 +110,6 @@ export default function AddBillForm() {
                   type="number"
                   inputMode="numeric"
                   min={0}
-                  placeholder="Type bill price here."
                   value={Number.isNaN(field.value) ? "" : field.value}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />

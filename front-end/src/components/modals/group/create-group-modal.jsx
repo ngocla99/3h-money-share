@@ -1,4 +1,7 @@
+import { CreateGroupForm } from "@/components/forms/create-group-form";
+import { DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { Modal } from "@/components/ui/modal";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { useCallback, useMemo, useState } from "react";
 
 const CreateGroupModalHelper = ({
@@ -10,12 +13,15 @@ const CreateGroupModalHelper = ({
       showModal={showCreateGroupModal}
       setShowModal={setShowCreateGroupModal}
     >
-      <div>
-        <div className="flex flex-col items-center justify-center gap-3 border-b border-gray-200 px-4 py-4 pt-8 sm:px-16">
-          <h3 className="text-lg font-medium">Download QR Code</h3>
-        </div>
-        <button>Close</button>
-      </div>
+      <>
+        <DialogHeader>
+          <DialogTitle>Create group</DialogTitle>
+          <DialogDescription>
+            Spread the word and gather your community!
+          </DialogDescription>
+        </DialogHeader>
+        <CreateGroupForm setShowModal={setShowCreateGroupModal} />
+      </>
     </Modal>
   );
 };

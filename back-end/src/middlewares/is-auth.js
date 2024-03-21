@@ -6,7 +6,6 @@ const { ObjectId } = mongodb
 exports.isAuthenticated = async (req, res, next) => {
   if (req.header && req.headers.authorization) {
     const token = req.headers.authorization.split(' ')[1]
-
     try {
       const { _id } = await jwt.verify(token, process.env.JWT_SECRET_KEY)
 

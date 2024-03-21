@@ -1,4 +1,4 @@
-import AddBillForm from "@/components/forms/add-bill-form";
+import { AddBillForm } from "@/components/forms/add-bill-form";
 import { Shell } from "@/components/shells/shell";
 import {
   Card,

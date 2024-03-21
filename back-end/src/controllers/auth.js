@@ -48,6 +48,5 @@ exports.signup = async (req, res, next) => {
 }
 
 exports.getMe = async (req, res, next) => {
-  console.log('🚀 ~ exports.getMe= ~ getMe:', req.user)
   res.json(req.user)
 }

@@ -1,10 +1,9 @@
 import axiosClient from "../axios";
 
-export async function getGroupsApi() {
-  const response = await axiosClient.get("/users/group");
-  return response.data;
+export function getGroupsApi() {
+  return axiosClient.get("/groups");
 }
 
-export function createGroupApi(user) {
-  return axiosClient.post("/users/group", user);
+export function createGroupApi(group) {
+  return axiosClient.post("/groups", group);
 }

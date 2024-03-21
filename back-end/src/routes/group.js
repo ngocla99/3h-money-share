@@ -4,14 +4,17 @@ const groupController = require('../controllers/group')
 const { isAuthenticated } = require('../middlewares/is-auth')
 
 router.get('/accept-invitation', groupController.acceptInvitation)
-router.post('/send-invitation', isAuthenticated, groupController.sendInvitation)
+
+router.use(isAuthenticated)
+
+router.post('/send-invitation', groupController.sendInvitation)
 
 router
-  .route('/:id', isAuthenticated)
+  .route('/:id')
   .get(groupController.getGroup)
   .patch(groupController.updateGroup)
   .delete(groupController.deleteGroup)
 
-router.route('', isAuthenticated).get(groupController.getGroups).post(groupController.createGroup)
+router.route('').get(groupController.getGroups).post(groupController.createGroup)
 
 module.exports = router

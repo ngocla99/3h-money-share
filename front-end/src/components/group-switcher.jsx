@@ -2,15 +2,15 @@ import { Plus, Settings2 } from "lucide-react";
 import { Icons } from "./icons";
 import { useCreateGroupModal } from "./modals/group/create-group-modal";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
 } from "./ui/dialog";
 import {
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
 } from "./ui/navigation-menu";
 
 export const GroupSwitcher = () => {
@@ -44,14 +44,14 @@ export const GroupSwitcher = () => {
               </DialogContent>
             </Dialog>
           </li>
-          <li className="block select-none space-y-1 p-3 rounded-md leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus-text-accent-foreground">
-            <button
-              className="text-sm font-medium leading-none flex"
-              onClick={() => setShowCreateGroupModal(true)}
-            >
+          <li
+            className="block select-none space-y-1 p-3 rounded-md leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus-text-accent-foreground"
+            onClick={() => setShowCreateGroupModal(true)}
+          >
+            <div className="text-sm font-medium leading-none flex">
               <Plus className="mr-2 size-4" />
               Create Group
-            </button>
+            </div>
           </li>
         </ul>
       </NavigationMenuContent>

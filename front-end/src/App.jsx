@@ -6,14 +6,14 @@ import Routes from "@/routes";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <QueryProvider>
-        <AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Routes />
-        </AuthProvider>
-      </QueryProvider>
-      <Toaster />
-    </ThemeProvider>
+          <Toaster />
+        </ThemeProvider>
+      </AuthProvider>
+    </QueryProvider>
   );
 }
 
