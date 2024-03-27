@@ -14,6 +14,7 @@ export function DataTableToolbar({
   searchableColumns = [],
   newRowLink,
   deleteRowsAction,
+  enableColumnsFilter,
 }) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const [isPending, startTransition] = React.useTransition();
@@ -98,7 +99,7 @@ export function DataTableToolbar({
             </div>
           </Link>
         ) : null}
-        <DataTableViewOptions table={table} />
+        {enableColumnsFilter && <DataTableViewOptions table={table} />}
       </div>
     </div>
   );

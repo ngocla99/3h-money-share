@@ -73,6 +73,7 @@ export function Modal({
       <DialogContent
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
+        className={className}
       >
         {children}
       </DialogContent>

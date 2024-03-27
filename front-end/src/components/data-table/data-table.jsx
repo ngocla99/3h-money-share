@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { useDebounce } from "@/hooks";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 export function DataTable({
   columns,
@@ -31,6 +32,8 @@ export function DataTable({
   searchableColumns = [],
   newRowLink,
   deleteRowsAction,
+  enableColumnsFilter = true,
+  classes,
 }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -236,8 +239,9 @@ export function DataTable({
         searchableColumns={searchableColumns}
         newRowLink={newRowLink}
         deleteRowsAction={deleteRowsAction}
+        enableColumnsFilter={enableColumnsFilter}
       />
-      <div className="rounded-md border">
+      <div className={cn("rounded-md border", classes?.tableRoot)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

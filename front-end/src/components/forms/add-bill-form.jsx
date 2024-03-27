@@ -1,5 +1,5 @@
 import { createBillApi } from "@/api/services/bill";
-import { getGroupsApi } from "@/api/services/group";
+import { getUserGroupsApi } from "@/api/services/group";
 import { billSchema } from "@/lib/validations/bill";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -44,12 +44,12 @@ export function AddBillForm() {
 
   const { data: groups } = useQuery({
     queryKey: ["groups"],
-    queryFn: getGroupsApi,
-    select: (data) =>
+    queryFn: getUserGroupsApi,
+    select: ({ data }) =>
       data.map((group) => ({
         label: group.name,
         value: group._id,
-        users: group.users.map(({ userId: user }) => ({
+        members: group.members.map(({ userId: user }) => ({
           label: user.name,
           value: user._id,
         })),
@@ -72,7 +72,7 @@ export function AddBillForm() {
   const groupId = watch("group");
   let users = [];
   if (groupId) {
-    users = groups.find((group) => group.value === groupId).users;
+    users = groups.find((group) => group.value === groupId).members;
   }
 
   const onSubmit = (data) => {

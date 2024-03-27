@@ -1,12 +1,7 @@
 import { Plus, Settings2 } from "lucide-react";
 import { Icons } from "./icons";
 import { useCreateGroupModal } from "./modals/group/create-group-modal";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from "./ui/dialog";
+import { useManageGroupModal } from "./modals/group/manage-group-modal";
 import {
   NavigationMenuContent,
   NavigationMenuItem,
@@ -15,6 +10,7 @@ import {
 
 export const GroupSwitcher = () => {
   const { setShowCreateGroupModal, CreateGroupModal } = useCreateGroupModal();
+  const { setShowManageGroupModal, ManageGroupModal } = useManageGroupModal();
 
   return (
     <NavigationMenuItem>
@@ -31,18 +27,14 @@ export const GroupSwitcher = () => {
               <span className="sr-only">Group</span>
             </div>
           </li>
-          <li className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-            <Dialog>
-              <DialogTrigger asChild>
-                <div className="text-sm font-medium leading-none flex">
-                  <Settings2 className="mr-2 size-4" />
-                  Manage Group
-                </div>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>Edit Group</DialogHeader>
-              </DialogContent>
-            </Dialog>
+          <li
+            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+            onClick={() => setShowManageGroupModal(true)}
+          >
+            <div className="text-sm font-medium leading-none flex">
+              <Settings2 className="mr-2 size-4" />
+              Manage Group
+            </div>
           </li>
           <li
             className="block select-none space-y-1 p-3 rounded-md leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus-text-accent-foreground"
@@ -56,6 +48,7 @@ export const GroupSwitcher = () => {
         </ul>
       </NavigationMenuContent>
       <CreateGroupModal />
+      <ManageGroupModal />
     </NavigationMenuItem>
   );
 };

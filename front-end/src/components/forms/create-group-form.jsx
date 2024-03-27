@@ -117,7 +117,7 @@ export function CreateGroupForm({ setShowModal }) {
         />
 
         <LoadingButton loading={createGroupMutation.isPending}>
-          Add Bill
+          Add Group
           <span className="sr-only">Add Group</span>
         </LoadingButton>
       </form>
