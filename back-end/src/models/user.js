@@ -28,7 +28,7 @@ userSchema.methods.generateToken = async function () {
 }
 
 userSchema.methods.getBills = async function () {
-  const groups = await this.getGroups()
+  const groups = await this.getUserGroups()
   const groupIds = groups.map(({ _id }) => _id.toString())
   const bills = await Bill.find({ group: { $in: groupIds } }).populate('payers')
 
@@ -46,8 +46,8 @@ userSchema.methods.getOthers = async function () {
   return users
 }
 
-userSchema.methods.getGroups = async function () {
-  const groups = await Group.find({ 'users.userId': this._id }).populate('users.userId')
+userSchema.methods.getUserGroups = async function () {
+  const groups = await Group.find({ 'members.userId': this._id }).populate('members.userId')
   return groups
 }
 

@@ -15,7 +15,7 @@ exports.createBill = async (req, res, next) => {
 exports.getBills = async (req, res, next) => {
   try {
     const bills = await req.user.getBills()
-    res.status(200).send(bills)
+    res.json(bills)
   } catch (err) {
     res.status(500).send(err)
   }

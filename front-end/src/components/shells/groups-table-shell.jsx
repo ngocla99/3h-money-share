@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 
-import { DataTable } from "@/components/data-table/data-table";
+import { DataTable } from "@/components/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,18 +76,5 @@ export function GroupsTableShell({ dataTable, isSearchable = true }) {
     []
   );
 
-  return (
-    <DataTable
-      columns={columns}
-      data={data}
-      pageCount={pageCount}
-      //   filterableColumns={[
-      //     {
-      //       id: "status",
-      //       title: "Trạng thái",
-      //       options: statusesFilter,
-      //     },
-      //   ]}
-    />
-  );
+  return <DataTable columns={columns} data={data} pageCount={pageCount} />;
 }

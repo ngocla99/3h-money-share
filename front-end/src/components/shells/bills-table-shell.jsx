@@ -2,7 +2,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 
 import { deleteBillApi, deletesBillApi } from "@/api/services/bill";
-import { DataTable } from "@/components/data-table/data-table";
+import { DataTable } from "@/components/data-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

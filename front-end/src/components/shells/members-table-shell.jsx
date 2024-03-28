@@ -1,11 +1,11 @@
-import { updateGroupApi } from "@/api/services/group";
-import { optionsConfig } from "@/config/options";
+import { deleteUserFromGroupApi, updateGroupApi } from "@/api/services/group";
+import { GROUP_ROLES } from "@/lib/constants/group";
 import { formatDate } from "@/lib/utils";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { toast } from "sonner";
-import { DataTable } from "../data-table/data-table";
+import { DataTable } from "../data-table";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
@@ -27,8 +27,6 @@ import {
 
 export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
   const { data, pageCount } = dataTable;
-  const [isPending, startTransition] = React.useTransition();
-  const [selectedRowIds, setSelectedRowIds] = React.useState([]);
   const queryClient = useQueryClient();
 
   const updateUserRoleMutation = useMutation({
@@ -41,9 +39,25 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
       toast.dismiss();
       toast.success("Role user updated successfully.");
     },
-    onError: () => {
+    onError: (err) => {
       toast.dismiss();
       toast.error("Role user updated unsuccessfully.");
+    },
+  });
+
+  const deleteUserFromGroupMutation = useMutation({
+    mutationFn: deleteUserFromGroupApi,
+    onMutate: () => toast.loading("Deleting..."),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["group", "65f7b2f50421b8c39655f5d4"],
+      });
+      toast.dismiss();
+      toast.success("User deleted successfully.");
+    },
+    onError: (err) => {
+      toast.dismiss();
+      toast.error("User deleted unsuccessfully.");
     },
   });
 
@@ -63,14 +77,14 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
                 <AvatarFallback>{name}</AvatarFallback>
               </Avatar>
               <div className="max-w-[30ch]">
-                <p className="flex gap-1 items-center">
+                <div className="flex gap-1 items-center">
                   <span>{name}</span>
                   {user?._id === _id && (
                     <Badge className="px-1.5 text-[11px] leading-[1.1]">
                       You
                     </Badge>
                   )}
-                </p>
+                </div>
                 <p className="text-muted-foreground text-[13px] truncate">
                   {email}
                 </p>
@@ -82,7 +96,7 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
         enableHiding: false,
       },
       {
-        accessorKey: "createdAt",
+        accessorKey: "updatedAt",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Joined" />
         ),
@@ -93,15 +107,20 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
       {
         accessorKey: "role",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Role" />
+          <DataTableColumnHeader
+            column={column}
+            title="Role"
+            className="min-w-28"
+          />
         ),
         cell: ({ cell, row }) => {
           return (
             <Select
               value={cell.getValue()}
+              disabled={updateUserRoleMutation.isPending}
               onValueChange={(value) => {
                 const data = {
-                  members: { userId: row.original._id, role: value },
+                  members: [{ userId: row.original._id, role: value }],
                 };
                 updateUserRole("65f7b2f50421b8c39655f5d4", data);
               }}
@@ -111,7 +130,7 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {optionsConfig.group.roleOptions.map((option) => (
+                  {GROUP_ROLES.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -139,21 +158,11 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-              // onClick={() => {
-              //   startTransition(() => {
-              //     row.toggleSelected(false);
-
-              //     toast.promise(
-              //       deleteBillMutation.mutateAsync(row.original._id),
-              //       {
-              //         loading: "Deleting...",
-              //         success: () => "Bill deleted successfully.",
-              //         error: (err) => catchError(err),
-              //       }
-              //     );
-              //   });
-              // }}
-              // disabled={isPending}
+                onClick={() => {
+                  const data = { members: [row.original._id] };
+                  deleteUserFromGroup("65f7b2f50421b8c39655f5d4", data);
+                }}
+                disabled={deleteUserFromGroupMutation.isPending}
               >
                 Remove member
               </DropdownMenuItem>
@@ -162,13 +171,19 @@ export const MembersTableShell = ({ dataTable, isSearchable = true, user }) => {
         ),
       },
     ],
-    []
+    [user]
   );
 
   const updateUserRole = (id, data) => {
     if (updateUserRoleMutation.isPending) return;
-    updateUserRoleMutation.mutate(id, data);
+    updateUserRoleMutation.mutate({ id, data });
   };
+
+  const deleteUserFromGroup = (id, data) => {
+    if (updateUserRoleMutation.isPending) return;
+    deleteUserFromGroupMutation.mutate({ id, data });
+  };
+
   return (
     <DataTable
       columns={columns}

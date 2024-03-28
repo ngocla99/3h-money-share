@@ -6,11 +6,19 @@ const jwt = require('jsonwebtoken')
 const { sendNotiSignupSuccess, sendGroupInvation } = require('../utils/nodemailer')
 const { ObjectId } = mongodb
 
-exports.getGroups = async (req, res, next) => {}
+exports.getUserGroups = async (req, res, next) => {
+  try {
+    const data = await req.user.getUserGroups()
+    res.json(data)
+  } catch (err) {
+    console.error('Error occured:', err)
+    res.status(500).json({ message: 'Internal server error.' })
+  }
+}
 
 exports.getGroup = async (req, res, next) => {
   try {
-    const data = await Group.findById(req.params.id)
+    const data = await Group.findById(req.params.groupId).populate('members.userId')
     res.json(data)
   } catch (err) {
     console.error('Error occured:', err)
@@ -25,7 +33,7 @@ exports.createGroup = async (req, res, next) => {
     const group = new Group({
       name,
       imageUrl,
-      slug: slug || slugify(name, { lower: true }),
+      slug: slug ? slugify(slug, { lower: true }) : slugify(name, { lower: true }),
       members: [
         {
           userId: req.user._id.toString(),
@@ -44,20 +52,13 @@ exports.createGroup = async (req, res, next) => {
 
 exports.updateGroup = async (req, res, next) => {
   try {
-    const group = await Group.findById(req.params.id)
-
-    const userInGroup = group.members.find((member) => member.userId.toString() === req.user._id.toString())
-    if (!userInGroup && userInGroup?.role !== 'g:admin') {
-      res.status(403).json({ message: 'You do not have permission to update this group.' })
-    }
-
-    const mMembers = group.members.map((member) => {
+    const mMembers = req.group.members.map((member) => {
       const mMember = req.body.members.find((m) => m.userId === member.userId.toString())
       return mMember ?? member
     })
 
     await Group.updateOne(
-      { _id: new Object(req.params.id) },
+      { _id: req.group._id },
       {
         ...req.body,
         members: mMembers.map((member) => ({ ...member, userId: new ObjectId(member.userId) }))
@@ -74,8 +75,31 @@ exports.updateGroup = async (req, res, next) => {
 
 exports.deleteGroup = async (req, res, next) => {
   try {
-    await Group.deleteOne({ _id: new ObjectId(req.params.id) })
+    await Group.deleteOne({ _id: new ObjectId(req.params.groupId) })
     res.json({ message: 'Users removed to group successfully.' })
+  } catch (err) {
+    console.error('Error occured:', err)
+    res.status(500).json({ message: 'Internal server error.' })
+  }
+}
+
+exports.deleteMembersFromGroup = async (req, res, next) => {
+  try {
+    const mMembers = req.group.members.filter((member) => !req.body.members.includes(member.userId.toString()))
+
+    if (mMembers.length === req.group.members.length) {
+      return res.status(404).json({ message: 'Member is not found.' })
+    }
+
+    await Group.updateOne(
+      { _id: req.group._id },
+      {
+        ...req.body,
+        members: mMembers
+      }
+    )
+
+    res.json({ message: 'Member deleted successfully.' })
   } catch (err) {
     console.error('Error occured:', err)
     res.status(500).json({ message: 'Internal server error.' })
@@ -96,6 +120,11 @@ exports.sendInvitation = async (req, res, next) => {
       return res.status(404).json({ message: 'One or more users not found.' })
     }
 
+    const isMemberInvited = members.some((member) => group.pendingInvitations.some((itm) => itm.email === member.email))
+    if (isMemberInvited) {
+      return res.status(409).json({ message: 'User is already invited.' })
+    }
+
     for (const member of members) {
       const data = {
         groupId,
@@ -110,7 +139,10 @@ exports.sendInvitation = async (req, res, next) => {
       sendGroupInvation({ user: req.user, group, to: member.email, token })
     }
 
-    res.json({ message: 'Users added to group successfully.' })
+    group.pendingInvitations = [...group.pendingInvitations, ...members]
+    await group.save()
+
+    res.json({ message: 'Users invited to group successfully.' })
   } catch (err) {
     console.error('Error occured1:', err)
     res.status(500).json({ message: 'Internal server error.' })

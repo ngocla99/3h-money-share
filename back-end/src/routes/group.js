@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const groupController = require('../controllers/group')
-const { isAuthenticated } = require('../middlewares/is-auth')
+const { isAuthenticated, restrictTo } = require('../middlewares/is-auth')
 
 router.get('/accept-invitation', groupController.acceptInvitation)
 
@@ -10,11 +10,13 @@ router.use(isAuthenticated)
 router.post('/send-invitation', groupController.sendInvitation)
 
 router
-  .route('/:id')
+  .route('/:groupId')
   .get(groupController.getGroup)
-  .patch(groupController.updateGroup)
+  .patch(restrictTo('g:admin'), groupController.updateGroup)
   .delete(groupController.deleteGroup)
 
-router.route('').get(groupController.getGroups).post(groupController.createGroup)
+router.patch('/:groupId/delete-members', restrictTo('g:admin'), groupController.deleteMembersFromGroup)
+
+router.route('').get(groupController.getUserGroups).post(groupController.createGroup)
 
 module.exports = router

@@ -63,3 +63,7 @@ export function catchError(err) {
     return toast.error("Something went wrong, please try again later.");
   }
 }
+
+export function getLabelFromValue(data, value) {
+  return data.find((itm) => itm.value === value).label;
+}

@@ -9,11 +9,11 @@ const groupSchema = new Schema(
     maxAllowedMembership: { type: Number, default: 5 },
     members: [
       {
-        type: new mongoose.Schema(
+        type: new Schema(
           {
             _id: false,
             userId: { type: Schema.Types.ObjectId, ref: 'user' },
-            role: { type: String, enum: ['g:admin', 'g:user'], required: true }
+            role: { type: String, enum: ['g:admin', 'g:member'], required: true }
           },
           { timestamps: true }
         )
@@ -21,8 +21,14 @@ const groupSchema = new Schema(
     ],
     pendingInvitations: [
       {
-        _id: false,
-        userId: { type: Schema.Types.ObjectId, ref: 'user' }
+        type: new Schema(
+          {
+            _id: false,
+            email: { type: String, required: true },
+            role: { type: String, enum: ['g:admin', 'g:member'], required: true }
+          },
+          { timestamps: true }
+        )
       }
     ]
   },

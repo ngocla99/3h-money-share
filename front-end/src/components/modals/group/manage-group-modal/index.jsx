@@ -1,16 +1,9 @@
-import { getMeApi } from "@/api/services/auth";
-import { getGroupApi } from "@/api/services/group";
-import { CreateGroupForm } from "@/components/forms/create-group-form";
-import { MembersTableShell } from "@/components/shells/members-table-shell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { Modal } from "@/components/ui/modal";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { QueryCache, useQuery } from "@tanstack/react-query";
 import { Settings, UserRound } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
+import { MembersTab } from "./members-tab";
 
 const ManageGroupModalHelper = ({
   showManageGroupModal,
@@ -22,7 +15,7 @@ const ManageGroupModalHelper = ({
       showModal={showManageGroupModal}
       setShowModal={setShowManageGroupModal}
     >
-      <div className="flex w-[55rem]">
+      <div className="flex w-[60rem]">
         <ManageSidebar />
         <ManageView />
       </div>
@@ -50,7 +43,7 @@ export const useManageGroupModal = () => {
 
 const ManageSidebar = () => {
   return (
-    <div className="max-w-60 py-9 px-6 border-r border-slate-300">
+    <div className="min-w-52 py-9 px-6 border-r border-border">
       <div className="ml-2 mb-4 flex gap-4 items-center">
         <Avatar className="size-8">
           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -81,55 +74,4 @@ const ManageView = () => {
       <MembersTab />
     </div>
   );
-};
-
-const MembersTab = () => {
-  const { data: members } = useQuery({
-    queryKey: ["group", "65f7b2f50421b8c39655f5d4"],
-    queryFn: () => getGroupApi("65f7b2f50421b8c39655f5d4"),
-    select: ({ data }) => {
-      return data.members.map(({ userId, ...rest }) => ({
-        ...rest,
-        _id: userId._id,
-        email: userId.email,
-        name: userId.name,
-      }));
-    },
-  });
-
-  const { data: user } = useQuery({
-    queryKey: ["me"],
-    queryFn: getMeApi,
-    select: ({ data }) => data,
-  });
-
-  return (
-    <div>
-      <h2 className="text-3xl font-semibold">Members</h2>
-      <p className="text-muted-foreground mt-2 mb-8">
-        View and manage group members
-      </p>
-      <Tabs defaultValue="members" orientation="vertical">
-        <TabsList variant="tab" className="">
-          <TabsTrigger variant="tab" value="members">
-            Members
-          </TabsTrigger>
-          <TabsTrigger variant="tab" value="invitations">
-            Invitations
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="members">
-          <MembersTableShell
-            dataTable={{ data: members || [], pageCount: 1 }}
-            user={user}
-          />
-        </TabsContent>
-        <TabsContent value="invitations">Hello</TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-const SettingsTab = () => {
-  return <div>Member Tab</div>;
 };
